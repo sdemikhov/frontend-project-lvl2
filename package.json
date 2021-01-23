@@ -1,0 +1,28 @@
+{
+  "name": "@hexlet/code",
+  "version": "0.1.0",
+  "description": "gendiff is a command-line utility that allows you to compare two json or yaml files.",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "gendiff": "bin/gendiff.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sdemikhov/frontend-project-lvl2.git"
+  },
+  "author": "Sergey Demikhov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sdemikhov/frontend-project-lvl2/issues"
+  },
+  "homepage": "https://github.com/sdemikhov/frontend-project-lvl2#readme",
+  "devDependencies": {
+    "eslint": "^7.18.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1"
+  },
+  "dependencies": {
+    "commander": "^7.0.0"
+  }
+}
