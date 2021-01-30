@@ -1,4 +1,5 @@
 #! /usr/bin/env node
-import buildParser from '../lib/cli.js';
+import buildParser from '../src/cli.js';
 
-buildParser().parse(process.argv);
+const parser = buildParser();
+parser.parse(process.argv);
