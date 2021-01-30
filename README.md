@@ -4,5 +4,6 @@
 <p>gendiff is a node.js command-line utility that allows you to compare two json or yaml files. See also <a href="https://github.com/sdemikhov/python-project-lvl2">python version</a>.</p>
 <h2>Usage:</h2>
 <pre></pre>
-###Plain json example
+
+<h3>Plain json example</h3>
 <a href="https://asciinema.org/a/XCBvl5cI5o2Mm4P3QIha2qkXB" target="_blank"><img src="https://asciinema.org/a/XCBvl5cI5o2Mm4P3QIha2qkXB.svg" /></a>
