@@ -1,6 +1,6 @@
 {
   "name": "@hexlet/code",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "gendiff is a command-line utility that allows you to compare two json or yaml files.",
   "main": "src/index.js",
   "type": "module",
@@ -15,7 +15,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "test": "npx -n '--experimental-vm-modules' jest"
+    "test": "npx jest"
   },
   "repository": {
     "type": "git",
