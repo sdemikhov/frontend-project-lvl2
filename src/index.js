@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
+import { parseJSON, parseYAML } from './parsers.js';
+
 const unchanged = 'unchanged';
 const changed = 'changed';
 const deleted = 'deleted';
@@ -10,8 +12,11 @@ const defaultType = 'default';
 
 const loadFile = (filePath) => {
   const absoluteFilePath = path.resolve(process.cwd(), filePath);
-  const jsonString = fs.readFileSync(absoluteFilePath, 'utf-8');
-  const data = JSON.parse(jsonString);
+  const string = fs.readFileSync(absoluteFilePath, 'utf-8');
+
+  const extension = path.extname(filePath);
+  const parse = extension === '.yml' ? parseYAML : parseJSON;
+  const data = parse(string);
   return data;
 };
 
@@ -25,7 +30,7 @@ const isChanged = (item) => item.status === changed;
 const isDeleted = (item) => item.status === deleted;
 const isAdded = (item) => item.status === added;
 
-const parse = (data1, data2) => {
+const getDifference = (data1, data2) => {
   const keysData1 = new Set(Object.keys(data1));
   const keysData2 = new Set(Object.keys(data2));
 
@@ -75,8 +80,8 @@ const genDiff = (filePath1, filePath2, format = defaultType) => {
   const data1 = loadFile(filePath1);
   const data2 = loadFile(filePath2);
 
-  const ast = parse(data1, data2);
-  const result = render(ast, format);
+  const diff = getDifference(data1, data2);
+  const result = render(diff, format);
   return result;
 };
 

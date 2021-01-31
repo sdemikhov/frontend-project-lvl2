@@ -16,4 +16,7 @@ test('gendiff with plain examples', () => {
   const pathSimpleJSON2 = getFixturePath('simple2.json');
   const result = readFile('simple-result.txt');
   expect(genDiff(pathSimpleJSON1, pathSimpleJSON2)).toBe(result);
+  const pathSimpleYAML1 = getFixturePath('simple1.yml');
+  const pathSimpleYAML2 = getFixturePath('simple2.yml');
+  expect(genDiff(pathSimpleYAML1, pathSimpleYAML2)).toBe(result);
 });
