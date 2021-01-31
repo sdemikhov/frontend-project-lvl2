@@ -1,4 +1,3 @@
-import path from 'path';
 import yaml from 'js-yaml';
 
 const parseJSON = (string) => JSON.parse(string, 'utf-8');
