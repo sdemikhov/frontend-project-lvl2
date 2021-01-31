@@ -1,11 +1,21 @@
 {
   "name": "@hexlet/code",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "gendiff is a command-line utility that allows you to compare two json or yaml files.",
   "main": "src/index.js",
   "type": "module",
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {}
+  },
   "bin": {
     "gendiff": "bin/gendiff.js"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "test": "npx jest"
   },
   "repository": {
     "type": "git",
@@ -17,12 +27,15 @@
     "url": "https://github.com/sdemikhov/frontend-project-lvl2/issues"
   },
   "homepage": "https://github.com/sdemikhov/frontend-project-lvl2#readme",
-  "devDependencies": {
-    "eslint": "^7.18.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.22.1"
-  },
   "dependencies": {
     "commander": "^7.0.0"
+  },
+  "devDependencies": {
+    "@jest/globals": "^26.6.2",
+    "eslint": "^7.18.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "jest": "^26.6.3",
+    "jest-cli": "^26.6.3"
   }
 }
