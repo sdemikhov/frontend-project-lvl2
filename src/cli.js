@@ -1,4 +1,4 @@
-import { program } from 'commander';
+import { Command } from 'commander';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
@@ -14,15 +14,18 @@ const getVersion = () => {
   return version;
 };
 
-const buildParser = () => (program
-  .version(getVersion())
-  .arguments('<filepath1> <filepath2>')
-  .description('Compares two configuration files and shows a difference.')
-  .helpOption('-h, --help', 'output usage information')
-  .option('-f, --format [type]', 'output format')
-  .action((filepath1, filepath2, options) => console.log(
-    genDiff(filepath1, filepath2, options.format),
-  ))
-);
+const run = () => {
+  const program = new Command();
+  program
+    .version(getVersion())
+    .arguments('<filepath1> <filepath2>')
+    .description('Compares two configuration files and shows a difference.')
+    .helpOption('-h, --help', 'output usage information')
+    .option('-f, --format [type]', 'output format')
+    .action((filepath1, filepath2, options) => console.log(
+      genDiff(filepath1, filepath2, options.format),
+    ));
+  program.parse(process.argv);
+};
 
-export default buildParser;
+export default run;
