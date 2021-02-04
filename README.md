@@ -17,4 +17,4 @@ Options:
 
 <h3>Examples:</h3>
 <a href="https://asciinema.org/a/XCBvl5cI5o2Mm4P3QIha2qkXB" target="_blank"><img src="https://asciinema.org/a/XCBvl5cI5o2Mm4P3QIha2qkXB.svg" /></a>
-<a href="https://asciinema.org/a/D1Y1TWnlMbwKDJYGQjVme9JIL" target="_blank"><img src="https://asciinema.org/a/D1Y1TWnlMbwKDJYGQjVme9JIL.svg" /></a>
+<a href="https://asciinema.org/a/Q3la2gsI9MAp2PDHVTSigLjbi" target="_blank"><img src="https://asciinema.org/a/Q3la2gsI9MAp2PDHVTSigLjbi.svg" /></a>
