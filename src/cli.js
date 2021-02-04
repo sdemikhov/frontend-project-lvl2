@@ -1,4 +1,4 @@
-import { Command } from 'commander';
+import commander from 'commander';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
@@ -6,6 +6,10 @@ import path from 'path';
 import genDiff from './index.js';
 
 const DEFAULT_FORMATTER = 'stylish';
+const FORMATTERS = [
+  DEFAULT_FORMATTER,
+  'plain',
+];
 
 const getVersion = () => {
   const pathCurrentFile = fileURLToPath(import.meta.url);
@@ -17,13 +21,14 @@ const getVersion = () => {
 };
 
 const run = () => {
-  const program = new Command();
+  const program = new commander.Command();
   program
     .version(getVersion())
     .arguments('<filepath1> <filepath2>')
     .description('Compares two configuration files and shows a difference.')
     .helpOption('-h, --help', 'output usage information')
-    .option('-f, --format [type]', 'output format', DEFAULT_FORMATTER)
+    .addOption(new commander.Option('-f, --format [type]', 'output format').default(DEFAULT_FORMATTER)
+      .choices(FORMATTERS))
     .action((filepath1, filepath2, options) => console.log(
       genDiff(filepath1, filepath2, options.format),
     ));
