@@ -13,7 +13,7 @@ const stringCompare = (string1, string2) => string1.localeCompare(string2);
 const formatValue = (item, indentCount = 0) => {
   if (_.isPlainObject(item)) {
     const entriesIndentCount = indentCount + INDENT_STEP;
-    const sortedKeys = Object.keys(item).sort(stringCompare);
+    const sortedKeys = [...Object.keys(item)].sort(stringCompare);
     const parts = sortedKeys.map((key) => (
       `${getIndent(entriesIndentCount)}${key}: ${formatValue(item[key], entriesIndentCount)}`
     ));
@@ -53,7 +53,7 @@ const format = (tree) => {
     }
     const name = diff.getName(item);
     const indent = getIndent(indentCount);
-    const children = diff.getChildren(item).sort((child1, child2) => {
+    const children = [...diff.getChildren(item)].sort((child1, child2) => {
       const name1 = diff.getName(child1);
       const name2 = diff.getName(child2);
       return stringCompare(name1, name2);

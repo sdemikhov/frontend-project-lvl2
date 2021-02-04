@@ -48,7 +48,7 @@ const format = (tree) => {
       return formatRecord(item, ancestry);
     }
     const name = diff.getName(item);
-    const children = diff.getChildren(item).sort((child1, child2) => {
+    const children = [...diff.getChildren(item)].sort((child1, child2) => {
       const name1 = diff.getName(child1);
       const name2 = diff.getName(child2);
       return stringCompare(name1, name2);
