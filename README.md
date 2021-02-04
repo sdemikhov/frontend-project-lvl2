@@ -11,10 +11,12 @@ Compares two configuration files and shows a difference.
 
 Options:
   -V, --version        output the version number
-  -f, --format [type]  output format
+  -f, --format [type]  output format (choices: "stylish", "plain", default:
+                       "stylish")
   -h, --help           output usage information
 </pre>
 
 <h3>Examples:</h3>
 <a href="https://asciinema.org/a/XCBvl5cI5o2Mm4P3QIha2qkXB" target="_blank"><img src="https://asciinema.org/a/XCBvl5cI5o2Mm4P3QIha2qkXB.svg" /></a>
 <a href="https://asciinema.org/a/Q3la2gsI9MAp2PDHVTSigLjbi" target="_blank"><img src="https://asciinema.org/a/Q3la2gsI9MAp2PDHVTSigLjbi.svg" /></a>
+<a href="https://asciinema.org/a/dD3C8TSSQf4MVI1I4qS2pWF1f" target="_blank"><img src="https://asciinema.org/a/dD3C8TSSQf4MVI1I4qS2pWF1f.svg" /></a>
