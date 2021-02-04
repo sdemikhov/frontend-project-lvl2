@@ -13,4 +13,6 @@ test-coverage:
 publish:
 	npm publish --dry-run
 
-.PHONY: install lint publish test test-coverage
+check: lint test publish
+
+.PHONY: install lint publish check test test-coverage
