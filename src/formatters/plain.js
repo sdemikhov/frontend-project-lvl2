@@ -2,6 +2,8 @@ import _ from 'lodash';
 
 import diff from '../diff.js';
 
+const STYLE_NAME = 'plain';
+
 const stringCompare = (string1, string2) => string1.localeCompare(string2);
 
 const isNonComplex = (value) => ([
@@ -40,8 +42,8 @@ const formatRecord = (record, ancestry) => {
   return null;
 };
 
-export default (tree) => {
-  const format = (item, ancestry = []) => {
+const format = (tree) => {
+  const inner = (item, ancestry = []) => {
     if (diff.isRecord(item)) {
       return formatRecord(item, ancestry);
     }
@@ -53,9 +55,14 @@ export default (tree) => {
     });
 
     const newAncestry = name === diff.ID ? [] : [...ancestry, name];
-    const parts = children.map((element) => format(element, newAncestry));
+    const parts = children.map((element) => inner(element, newAncestry));
     return parts.filter((part) => !_.isNull(part)).join('\n');
   };
 
-  return format(tree);
+  return inner(tree);
+};
+
+export default {
+  STYLE_NAME,
+  format,
 };

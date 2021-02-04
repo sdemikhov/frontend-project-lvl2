@@ -14,6 +14,7 @@ const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8'
 describe('gendiff', () => {
   const resultStylish = readFile('result-stylish.txt');
   const resultPlain = readFile('result-plain.txt');
+  const resultJSON = readFile('result-json.txt');
 
   const pathJSON1 = getFixturePath('json1.json');
   const pathJSON2 = getFixturePath('json2.json');
@@ -27,5 +28,9 @@ describe('gendiff', () => {
   test('plain format', () => {
     expect(genDiff(pathYML1, pathYML2, 'plain')).toBe(resultPlain);
     expect(genDiff(pathYML1, pathYML2, 'plain')).toBe(resultPlain);
+  });
+  test('json format', () => {
+    expect(genDiff(pathYML1, pathYML2, 'json')).toBe(resultJSON);
+    expect(genDiff(pathYML1, pathYML2, 'json')).toBe(resultJSON);
   });
 });

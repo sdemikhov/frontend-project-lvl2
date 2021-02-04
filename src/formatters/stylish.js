@@ -2,6 +2,8 @@ import _ from 'lodash';
 
 import diff from '../diff.js';
 
+const STYLE_NAME = 'stylish';
+
 const INDENT_STEP = 4;
 
 const getIndent = (indentCount) => ' '.repeat(indentCount);
@@ -42,10 +44,10 @@ const formatRecord = (record, indentCount = 0) => {
   return `${indent}${name}: ${formatValue(props.value, indentCount)}`;
 };
 
-export default (tree) => {
+const format = (tree) => {
   const outerLevel = 0;
 
-  const format = (item, indentCount = outerLevel) => {
+  const inner = (item, indentCount = outerLevel) => {
     if (diff.isRecord(item)) {
       return formatRecord(item, indentCount);
     }
@@ -57,12 +59,17 @@ export default (tree) => {
       return stringCompare(name1, name2);
     });
 
-    const formattedChildren = children.map((element) => format(element, indentCount + INDENT_STEP));
+    const formattedChildren = children.map((element) => inner(element, indentCount + INDENT_STEP));
     const openBorder = name === diff.ID ? '{' : `${indent}${name}: {`;
     const closeBorder = name === diff.ID ? '}' : `${indent}}`;
     const result = [openBorder, ...formattedChildren, closeBorder];
     return result.join('\n');
   };
 
-  return format(tree);
+  return inner(tree);
+};
+
+export default {
+  STYLE_NAME,
+  format,
 };
