@@ -4,8 +4,6 @@ import diff from '../diff.js';
 
 const STYLE_NAME = 'plain';
 
-const stringCompare = (string1, string2) => string1.localeCompare(string2);
-
 const isNonComplex = (value) => ([
   _.isNumber,
   _.isBoolean,
