@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import diff from '../diff.js';
+import ast from '../ast.js';
 
 const STYLE_NAME = 'plain';
 
@@ -22,38 +22,38 @@ const formatValue = (value) => {
 };
 
 const formatRecord = (record, ancestry) => {
-  const name = diff.getName(record);
-  const props = diff.getProperties(record);
+  const name = ast.getName(record);
+  const props = ast.getProperties(record);
 
   const fullName = [...ancestry, name].join('.');
-  if (diff.isAdded(record)) {
+  if (ast.isAdded(record)) {
     return `Property '${fullName}' was added with value: ${formatValue(props.value)}`;
   }
-  if (diff.isUpdated(record)) {
+  if (ast.isUpdated(record)) {
     const before = formatValue(props.value.before);
     const after = formatValue(props.value.after);
     return `Property '${fullName}' was updated. From ${before} to ${after}`;
   }
-  if (diff.isRemoved(record)) {
+  if (ast.isRemoved(record)) {
     return `Property '${fullName}' was removed`;
   }
   return null;
 };
 
-const format = (tree) => {
+const format = (AST) => {
   const inner = (item, ancestry = []) => {
-    if (diff.isRecord(item)) {
+    if (ast.isRecord(item)) {
       return formatRecord(item, ancestry);
     }
-    const name = diff.getName(item);
-    const children = _.sortBy(diff.getChildren(item), [diff.getName]);
+    const name = ast.getName(item);
+    const children = _.sortBy(ast.getChildren(item), [ast.getName]);
 
-    const newAncestry = name === diff.ID ? [] : [...ancestry, name];
+    const newAncestry = name === ast.ID ? [] : [...ancestry, name];
     const parts = children.map((element) => inner(element, newAncestry));
     return parts.filter((part) => !_.isNull(part)).join('\n');
   };
 
-  return inner(tree);
+  return inner(AST);
 };
 
 export default {

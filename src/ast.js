@@ -27,14 +27,14 @@ const makeContainer = (name, children) => ({
   name, children, type: CONTAINER,
 });
 
-const buildDiff = (data1, data2) => {
-  const keysData1 = new Set(Object.keys(data1));
-  const keysData2 = new Set(Object.keys(data2));
-  const equalKeys = new Set([...keysData2].filter((key) => keysData1.has(key)));
-  const unchangedKeys = new Set([...equalKeys].filter((key) => _.isEqual(data1[key], data2[key])));
-  const updatedKeys = new Set([...equalKeys].filter((key) => !_.isEqual(data1[key], data2[key])));
-  const removedKeys = new Set([...keysData1].filter((key) => !keysData2.has(key)));
-  const addedKeys = new Set([...keysData2].filter((key) => !keysData1.has(key)));
+const buildAST = (data1, data2) => {
+  const keysData1 = Object.keys(data1);
+  const keysData2 = Object.keys(data2);
+  const equalKeys = keysData2.filter((key) => keysData1.includes(key));
+  const unchangedKeys = equalKeys.filter((key) => _.isEqual(data1[key], data2[key]));
+  const updatedKeys = equalKeys.filter((key) => !_.isEqual(data1[key], data2[key]));
+  const removedKeys = keysData1.filter((key) => !keysData2.includes(key));
+  const addedKeys = keysData2.filter((key) => !keysData1.includes(key));
 
   const unchangedItems = [...unchangedKeys].map(
     (key) => makeRecord(key, { value: data2[key], status: UNCHANGED }),
@@ -43,7 +43,7 @@ const buildDiff = (data1, data2) => {
     const before = data1[key];
     const after = data2[key];
     if (_.isPlainObject(before) && _.isPlainObject(after)) {
-      return [...acc, makeContainer(key, getChildren(buildDiff(before, after)))];
+      return [...acc, makeContainer(key, getChildren(buildAST(before, after)))];
     }
     const value = { before, after };
     return [...acc, makeRecord(key, { value, status: UPDATED })];
@@ -59,12 +59,6 @@ const buildDiff = (data1, data2) => {
 
 export default {
   ID,
-  RECORD,
-  CONTAINER,
-  UNCHANGED,
-  UPDATED,
-  REMOVED,
-  ADDED,
   getName,
   getProperties,
   getChildren,
@@ -75,5 +69,5 @@ export default {
   isAdded,
   makeRecord,
   makeContainer,
-  buildDiff,
+  buildAST,
 };

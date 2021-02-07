@@ -1,6 +1,6 @@
 const STYLE_NAME = 'json';
 
-const format = (tree) => JSON.stringify(tree);
+const format = (AST) => JSON.stringify({ ...AST, name: 'Diff' });
 
 export default {
   STYLE_NAME,

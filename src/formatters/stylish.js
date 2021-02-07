@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import diff from '../diff.js';
+import ast from '../ast.js';
 
 const STYLE_NAME = 'stylish';
 
@@ -22,45 +22,45 @@ const formatValue = (item, indentCount = 0) => {
 };
 
 const formatRecord = (record, indentCount = 0) => {
-  const name = diff.getName(record);
-  const props = diff.getProperties(record);
+  const name = ast.getName(record);
+  const props = ast.getProperties(record);
   const signLength = 2;
-  const prefixIndentCount = !diff.isUnchanged(record) ? (indentCount - signLength) : indentCount;
+  const prefixIndentCount = !ast.isUnchanged(record) ? (indentCount - signLength) : indentCount;
   const indent = getIndent(prefixIndentCount);
 
-  if (diff.isAdded(record)) {
+  if (ast.isAdded(record)) {
     return `${indent}+ ${name}: ${formatValue(props.value, indentCount)}`;
   }
-  if (diff.isUpdated(record)) {
+  if (ast.isUpdated(record)) {
     const beforeString = `${indent}- ${name}: ${formatValue(props.value.before, indentCount)}`;
     const afterString = `${indent}+ ${name}: ${formatValue(props.value.after, indentCount)}`;
     return [beforeString, afterString].join('\n');
   }
-  if (diff.isRemoved(record)) {
+  if (ast.isRemoved(record)) {
     return `${indent}- ${name}: ${formatValue(props.value, indentCount)}`;
   }
   return `${indent}${name}: ${formatValue(props.value, indentCount)}`;
 };
 
-const format = (tree) => {
+const format = (AST) => {
   const outerLevel = 0;
 
   const inner = (item, indentCount = outerLevel) => {
-    if (diff.isRecord(item)) {
+    if (ast.isRecord(item)) {
       return formatRecord(item, indentCount);
     }
-    const name = diff.getName(item);
+    const name = ast.getName(item);
     const indent = getIndent(indentCount);
-    const children = _.sortBy(diff.getChildren(item), [diff.getName]);
+    const children = _.sortBy(ast.getChildren(item), [ast.getName]);
 
     const formattedChildren = children.map((element) => inner(element, indentCount + INDENT_STEP));
-    const openBorder = name === diff.ID ? '{' : `${indent}${name}: {`;
-    const closeBorder = name === diff.ID ? '}' : `${indent}}`;
+    const openBorder = name === ast.ID ? '{' : `${indent}${name}: {`;
+    const closeBorder = name === ast.ID ? '}' : `${indent}}`;
     const result = [openBorder, ...formattedChildren, closeBorder];
     return result.join('\n');
   };
 
-  return inner(tree);
+  return inner(AST);
 };
 
 export default {
