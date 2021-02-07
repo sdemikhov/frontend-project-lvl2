@@ -21,16 +21,14 @@ describe('gendiff', () => {
 
   const pathYML1 = getFixturePath('yml1.yml');
   const pathYML2 = getFixturePath('yml2.yml');
-  test('stylish format', () => {
-    expect(genDiff(pathJSON1, pathJSON2)).toBe(resultStylish);
-    expect(genDiff(pathYML1, pathYML2)).toBe(resultStylish);
-  });
-  test('plain format', () => {
-    expect(genDiff(pathYML1, pathYML2, 'plain')).toBe(resultPlain);
-    expect(genDiff(pathYML1, pathYML2, 'plain')).toBe(resultPlain);
-  });
-  test('json format', () => {
-    expect(genDiff(pathYML1, pathYML2, 'json')).toBe(resultJSON);
-    expect(genDiff(pathYML1, pathYML2, 'json')).toBe(resultJSON);
+  test.each([
+    [pathJSON1, pathJSON2, 'stylish', resultStylish],
+    [pathJSON1, pathJSON2, 'plain', resultPlain],
+    [pathJSON1, pathJSON2, 'json', resultJSON],
+    [pathYML1, pathYML2, 'stylish', resultStylish],
+    [pathYML1, pathYML2, 'plain', resultPlain],
+    [pathYML1, pathYML2, 'json', resultJSON],
+  ])('gendiff(%s, %s, %s)', (filePath1, filePath2, format, expected) => {
+    expect(genDiff(filePath1, filePath2, format)).toBe(expected);
   });
 });
