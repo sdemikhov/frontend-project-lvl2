@@ -23,15 +23,15 @@ const formatValue = (value) => {
 
 const formatRecord = (record, ancestry) => {
   const name = ast.getName(record);
-  const props = ast.getProperties(record);
+  const value = ast.getValue(record);
 
   const fullName = [...ancestry, name].join('.');
   if (ast.isAdded(record)) {
-    return `Property '${fullName}' was added with value: ${formatValue(props.value)}`;
+    return `Property '${fullName}' was added with value: ${formatValue(value)}`;
   }
   if (ast.isUpdated(record)) {
-    const before = formatValue(props.value.before);
-    const after = formatValue(props.value.after);
+    const before = formatValue(value.before);
+    const after = formatValue(value.after);
     return `Property '${fullName}' was updated. From ${before} to ${after}`;
   }
   if (ast.isRemoved(record)) {
@@ -40,16 +40,20 @@ const formatRecord = (record, ancestry) => {
   return null;
 };
 
-const format = (AST, ancestry = []) => {
-  if (ast.isRecord(AST)) {
-    return formatRecord(AST, ancestry);
-  }
-  const name = ast.getName(AST);
-  const children = _.sortBy(ast.getChildren(AST), [ast.getName]);
+const format = (AST) => {
+  const inner = (item, ancestry = []) => {
+    if (!ast.isContainer(item)) {
+      return formatRecord(item, ancestry);
+    }
+    const name = ast.getName(item);
+    const children = _.sortBy(ast.getChildren(item), [ast.getName]);
 
-  const newAncestry = name === ast.ID ? [] : [...ancestry, name];
-  const parts = children.map((element) => format(element, newAncestry));
-  return parts.filter((part) => !_.isNull(part)).join('\n');
+    const newAncestry = name === ast.ID ? [] : [...ancestry, name];
+    const parts = children.map((element) => inner(element, newAncestry));
+    return parts.filter((part) => !_.isNull(part)).join('\n');
+  };
+
+  return inner(AST);
 };
 
 export default {
