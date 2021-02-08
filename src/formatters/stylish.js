@@ -43,7 +43,7 @@ const formatRecord = (record, indentCount = 0) => {
 };
 
 const format = (AST) => {
-  const inner = (item, indentCount = 0) => {
+  const inner = (item, indentCount = 4) => {
     if (!ast.isContainer(item)) {
       return formatRecord(item, indentCount);
     }
@@ -52,13 +52,13 @@ const format = (AST) => {
     const children = _.sortBy(ast.getChildren(item), [ast.getName]);
 
     const formattedChildren = children.map((element) => inner(element, indentCount + INDENT_STEP));
-    const openBorder = name === ast.ID ? '{' : `${indent}${name}: {`;
-    const closeBorder = name === ast.ID ? '}' : `${indent}}`;
-    const result = [openBorder, ...formattedChildren, closeBorder];
+    const result = [`${indent}${name}: {`, ...formattedChildren, `${indent}}`];
     return result.join('\n');
   };
 
-  return inner(AST);
+  const formattedASTParts = AST.map((item) => inner(item));
+  const result = ['{', ...formattedASTParts, '}'];
+  return result.join('\n');
 };
 
 export default {

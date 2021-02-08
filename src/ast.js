@@ -1,7 +1,5 @@
 import _ from 'lodash';
 
-const ID = Symbol('id');
-
 const CONTAINER = 'Container';
 const UNCHANGED = 'Unchanged';
 const UPDATED = 'Updated';
@@ -41,18 +39,17 @@ const buildAST = (obj1, obj2) => {
     const before = obj1[key];
     const after = obj2[key];
     if (_.isPlainObject(before) && _.isPlainObject(after)) {
-      return [...acc, makeContainer(key, getChildren(buildAST(before, after)))];
+      return [...acc, makeContainer(key, buildAST(before, after))];
     }
     const value = { before, after };
     return [...acc, makeRecord(key, value, UPDATED)];
   }, []);
   const removedItems = removedKeys.map((key) => makeRecord(key, obj1[key], REMOVED));
   const addedItems = addedKeys.map((key) => makeRecord(key, obj2[key], ADDED));
-  return makeContainer(ID, [...unchangedItems, ...updatedItems, ...removedItems, ...addedItems]);
+  return [...unchangedItems, ...updatedItems, ...removedItems, ...addedItems];
 };
 
 export default {
-  ID,
   getName,
   getValue,
   getChildren,
