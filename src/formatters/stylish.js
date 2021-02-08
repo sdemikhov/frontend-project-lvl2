@@ -56,7 +56,7 @@ const format = (AST) => {
     return result.join('\n');
   };
 
-  const formattedASTParts = AST.map((item) => inner(item));
+  const formattedASTParts = _.sortBy(AST, [ast.getName]).map((item) => inner(item));
   const result = ['{', ...formattedASTParts, '}'];
   return result.join('\n');
 };

@@ -53,7 +53,7 @@ const format = (AST) => {
     return parts.filter((part) => !_.isNull(part)).join('\n');
   };
 
-  const result = AST.map((item) => inner(item));
+  const result = _.sortBy(AST, [ast.getName]).map((item) => inner(item));
   return result.join('\n');
 };
 
