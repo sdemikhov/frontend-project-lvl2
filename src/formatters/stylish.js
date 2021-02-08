@@ -42,22 +42,19 @@ const formatRecord = (record, indentCount = 0) => {
   return `${indent}${name}: ${formatValue(props.value, indentCount)}`;
 };
 
-const format = (AST) => {
-  const inner = (item, indentCount = 0) => {
-    if (ast.isRecord(item)) {
-      return formatRecord(item, indentCount);
-    }
-    const name = ast.getName(item);
-    const indent = getIndent(indentCount);
-    const children = _.sortBy(ast.getChildren(item), [ast.getName]);
+const format = (AST, indentCount = 0) => {
+  if (ast.isRecord(AST)) {
+    return formatRecord(AST, indentCount);
+  }
+  const name = ast.getName(AST);
+  const indent = getIndent(indentCount);
+  const children = _.sortBy(ast.getChildren(AST), [ast.getName]);
 
-    const formattedChildren = children.map((element) => inner(element, indentCount + INDENT_STEP));
-    const openBorder = name === ast.ID ? '{' : `${indent}${name}: {`;
-    const closeBorder = name === ast.ID ? '}' : `${indent}}`;
-    const result = [openBorder, ...formattedChildren, closeBorder];
-    return result.join('\n');
-  };
-  return inner(AST);
+  const formattedChildren = children.map((element) => format(element, indentCount + INDENT_STEP));
+  const openBorder = name === ast.ID ? '{' : `${indent}${name}: {`;
+  const closeBorder = name === ast.ID ? '}' : `${indent}}`;
+  const result = [openBorder, ...formattedChildren, closeBorder];
+  return result.join('\n');
 };
 
 export default {

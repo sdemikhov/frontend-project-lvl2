@@ -40,20 +40,16 @@ const formatRecord = (record, ancestry) => {
   return null;
 };
 
-const format = (AST) => {
-  const inner = (item, ancestry = []) => {
-    if (ast.isRecord(item)) {
-      return formatRecord(item, ancestry);
-    }
-    const name = ast.getName(item);
-    const children = _.sortBy(ast.getChildren(item), [ast.getName]);
+const format = (AST, ancestry = []) => {
+  if (ast.isRecord(AST)) {
+    return formatRecord(AST, ancestry);
+  }
+  const name = ast.getName(AST);
+  const children = _.sortBy(ast.getChildren(AST), [ast.getName]);
 
-    const newAncestry = name === ast.ID ? [] : [...ancestry, name];
-    const parts = children.map((element) => inner(element, newAncestry));
-    return parts.filter((part) => !_.isNull(part)).join('\n');
-  };
-
-  return inner(AST);
+  const newAncestry = name === ast.ID ? [] : [...ancestry, name];
+  const parts = children.map((element) => format(element, newAncestry));
+  return parts.filter((part) => !_.isNull(part)).join('\n');
 };
 
 export default {
