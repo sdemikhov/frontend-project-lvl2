@@ -48,7 +48,7 @@ const format = (AST) => {
     const name = ast.getName(item);
     const children = _.sortBy(ast.getChildren(item), [ast.getName]);
 
-    const newAncestry = name === ast.ID ? [] : [...ancestry, name];
+    const newAncestry = [...ancestry, name];
     const parts = children.map((element) => inner(element, newAncestry));
     return parts.filter((part) => !_.isNull(part)).join('\n');
   };
