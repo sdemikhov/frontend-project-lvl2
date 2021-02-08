@@ -43,9 +43,7 @@ const formatRecord = (record, indentCount = 0) => {
 };
 
 const format = (AST) => {
-  const outerLevel = 0;
-
-  const inner = (item, indentCount = outerLevel) => {
+  const inner = (item, indentCount = 0) => {
     if (ast.isRecord(item)) {
       return formatRecord(item, indentCount);
     }
@@ -59,7 +57,6 @@ const format = (AST) => {
     const result = [openBorder, ...formattedChildren, closeBorder];
     return result.join('\n');
   };
-
   return inner(AST);
 };
 

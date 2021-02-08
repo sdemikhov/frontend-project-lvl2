@@ -35,11 +35,10 @@ const buildAST = (data1, data2) => {
   const updatedKeys = equalKeys.filter((key) => !_.isEqual(data1[key], data2[key]));
   const removedKeys = keysData1.filter((key) => !keysData2.includes(key));
   const addedKeys = keysData2.filter((key) => !keysData1.includes(key));
-
-  const unchangedItems = [...unchangedKeys].map(
+  const unchangedItems = unchangedKeys.map(
     (key) => makeRecord(key, { value: data2[key], status: UNCHANGED }),
   );
-  const updatedItems = [...updatedKeys].reduce((acc, key) => {
+  const updatedItems = updatedKeys.reduce((acc, key) => {
     const before = data1[key];
     const after = data2[key];
     if (_.isPlainObject(before) && _.isPlainObject(after)) {
@@ -48,10 +47,10 @@ const buildAST = (data1, data2) => {
     const value = { before, after };
     return [...acc, makeRecord(key, { value, status: UPDATED })];
   }, []);
-  const removedItems = [...removedKeys].map(
+  const removedItems = removedKeys.map(
     (key) => makeRecord(key, { value: data1[key], status: REMOVED }),
   );
-  const addedItems = [...addedKeys].map(
+  const addedItems = addedKeys.map(
     (key) => makeRecord(key, { value: data2[key], status: ADDED }),
   );
   return makeContainer(ID, [...unchangedItems, ...updatedItems, ...removedItems, ...addedItems]);
