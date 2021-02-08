@@ -8,45 +8,43 @@ const INDENT_STEP = 4;
 
 const getIndent = (indentCount) => ' '.repeat(indentCount);
 
-const formatValue = (item, indentCount = 0) => {
-  if (_.isPlainObject(item)) {
+const formatValue = (value, indentCount = 0) => {
+  if (_.isPlainObject(value)) {
     const entriesIndentCount = indentCount + INDENT_STEP;
-    const sortedKeys = _.sortBy(Object.keys(item));
+    const sortedKeys = _.sortBy(Object.keys(value));
     const parts = sortedKeys.map((key) => (
-      `${getIndent(entriesIndentCount)}${key}: ${formatValue(item[key], entriesIndentCount)}`
+      `${getIndent(entriesIndentCount)}${key}: ${formatValue(value[key], entriesIndentCount)}`
     ));
     const formattedObject = ['{', ...parts, `${getIndent(indentCount)}}`];
     return formattedObject.join('\n');
   }
-  return String(item);
+  return String(value);
 };
 
 const formatRecord = (record, indentCount = 0) => {
   const name = ast.getName(record);
-  const props = ast.getProperties(record);
+  const value = ast.getValue(record);
   const signLength = 2;
   const prefixIndentCount = !ast.isUnchanged(record) ? (indentCount - signLength) : indentCount;
   const indent = getIndent(prefixIndentCount);
 
   if (ast.isAdded(record)) {
-    return `${indent}+ ${name}: ${formatValue(props.value, indentCount)}`;
+    return `${indent}+ ${name}: ${formatValue(value, indentCount)}`;
   }
   if (ast.isUpdated(record)) {
-    const beforeString = `${indent}- ${name}: ${formatValue(props.value.before, indentCount)}`;
-    const afterString = `${indent}+ ${name}: ${formatValue(props.value.after, indentCount)}`;
+    const beforeString = `${indent}- ${name}: ${formatValue(value.before, indentCount)}`;
+    const afterString = `${indent}+ ${name}: ${formatValue(value.after, indentCount)}`;
     return [beforeString, afterString].join('\n');
   }
   if (ast.isRemoved(record)) {
-    return `${indent}- ${name}: ${formatValue(props.value, indentCount)}`;
+    return `${indent}- ${name}: ${formatValue(value, indentCount)}`;
   }
-  return `${indent}${name}: ${formatValue(props.value, indentCount)}`;
+  return `${indent}${name}: ${formatValue(value, indentCount)}`;
 };
 
 const format = (AST) => {
-  const outerLevel = 0;
-
-  const inner = (item, indentCount = outerLevel) => {
-    if (ast.isRecord(item)) {
+  const inner = (item, indentCount = 0) => {
+    if (!ast.isContainer(item)) {
       return formatRecord(item, indentCount);
     }
     const name = ast.getName(item);

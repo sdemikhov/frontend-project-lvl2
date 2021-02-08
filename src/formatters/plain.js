@@ -23,15 +23,15 @@ const formatValue = (value) => {
 
 const formatRecord = (record, ancestry) => {
   const name = ast.getName(record);
-  const props = ast.getProperties(record);
+  const value = ast.getValue(record);
 
   const fullName = [...ancestry, name].join('.');
   if (ast.isAdded(record)) {
-    return `Property '${fullName}' was added with value: ${formatValue(props.value)}`;
+    return `Property '${fullName}' was added with value: ${formatValue(value)}`;
   }
   if (ast.isUpdated(record)) {
-    const before = formatValue(props.value.before);
-    const after = formatValue(props.value.after);
+    const before = formatValue(value.before);
+    const after = formatValue(value.after);
     return `Property '${fullName}' was updated. From ${before} to ${after}`;
   }
   if (ast.isRemoved(record)) {
@@ -42,7 +42,7 @@ const formatRecord = (record, ancestry) => {
 
 const format = (AST) => {
   const inner = (item, ancestry = []) => {
-    if (ast.isRecord(item)) {
+    if (!ast.isContainer(item)) {
       return formatRecord(item, ancestry);
     }
     const name = ast.getName(item);

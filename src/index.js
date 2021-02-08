@@ -24,10 +24,10 @@ const formatters = {
 };
 
 const genDiff = (filePath1, filePath2, format = stylish.STYLE_NAME) => {
-  const data1 = loadFile(filePath1);
-  const data2 = loadFile(filePath2);
+  const obj1 = loadFile(filePath1);
+  const obj2 = loadFile(filePath2);
 
-  const AST = ast.buildAST(data1, data2);
+  const AST = ast.buildAST(obj1, obj2);
 
   const formatter = formatters[format];
   return formatter.format(AST);
