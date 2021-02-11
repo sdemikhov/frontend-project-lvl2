@@ -43,13 +43,13 @@ export default (AST) => {
       return formatRecord(item, ancestry);
     }
     const name = ast.getName(item);
-    const children = _.sortBy(ast.getChildren(item), [ast.getName]);
+    const children = ast.getChildren(item);
 
     const newAncestry = [...ancestry, name];
     const parts = children.map((element) => inner(element, newAncestry));
     return parts.filter((part) => !_.isNull(part)).join('\n');
   };
 
-  const result = _.sortBy(AST, [ast.getName]).map((item) => inner(item));
+  const result = AST.map((item) => inner(item));
   return result.join('\n');
 };

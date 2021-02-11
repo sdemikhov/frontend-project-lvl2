@@ -46,7 +46,7 @@ const buildAST = (obj1, obj2) => {
   }, []);
   const removedItems = removedKeys.map((key) => makeRecord(key, obj1[key], REMOVED));
   const addedItems = addedKeys.map((key) => makeRecord(key, obj2[key], ADDED));
-  return [...unchangedItems, ...updatedItems, ...removedItems, ...addedItems];
+  return _.sortBy([...unchangedItems, ...updatedItems, ...removedItems, ...addedItems], getName);
 };
 
 export default {

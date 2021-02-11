@@ -47,14 +47,14 @@ export default (AST) => {
     }
     const name = ast.getName(item);
     const indent = getIndent(indentCount);
-    const children = _.sortBy(ast.getChildren(item), [ast.getName]);
+    const children = ast.getChildren(item);
 
     const formattedChildren = children.map((element) => inner(element, indentCount + INDENT_STEP));
     const result = [`${indent}${name}: {`, ...formattedChildren, `${indent}}`];
     return result.join('\n');
   };
 
-  const formattedASTParts = _.sortBy(AST, [ast.getName]).map((item) => inner(item));
+  const formattedASTParts = AST.map((item) => inner(item));
   const result = ['{', ...formattedASTParts, '}'];
   return result.join('\n');
 };
