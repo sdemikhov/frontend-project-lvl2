@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import ast from '../ast.js';
+import diff from '../diff.js';
 
 const isNonComplex = (value) => ([
   _.isNumber,
@@ -19,37 +19,37 @@ const formatValue = (value) => {
 };
 
 const formatRecord = (record, ancestry) => {
-  const name = ast.getName(record);
-  const value = ast.getValue(record);
+  const name = diff.getName(record);
+  const value = diff.getValue(record);
 
   const fullName = [...ancestry, name].join('.');
-  if (ast.isAdded(record)) {
+  if (diff.isAdded(record)) {
     return `Property '${fullName}' was added with value: ${formatValue(value)}`;
   }
-  if (ast.isUpdated(record)) {
+  if (diff.isUpdated(record)) {
     const before = formatValue(value.before);
     const after = formatValue(value.after);
     return `Property '${fullName}' was updated. From ${before} to ${after}`;
   }
-  if (ast.isRemoved(record)) {
+  if (diff.isRemoved(record)) {
     return `Property '${fullName}' was removed`;
   }
   return null;
 };
 
-export default (AST) => {
+export default (diffAST) => {
   const inner = (item, ancestry = []) => {
-    if (!ast.isContainer(item)) {
+    if (!diff.isContainer(item)) {
       return formatRecord(item, ancestry);
     }
-    const name = ast.getName(item);
-    const children = ast.getChildren(item);
+    const name = diff.getName(item);
+    const children = diff.getChildren(item);
 
     const newAncestry = [...ancestry, name];
     const parts = children.map((element) => inner(element, newAncestry));
     return parts.filter((part) => !_.isNull(part)).join('\n');
   };
 
-  const result = AST.map((item) => inner(item));
+  const result = diffAST.map((item) => inner(item));
   return result.join('\n');
 };

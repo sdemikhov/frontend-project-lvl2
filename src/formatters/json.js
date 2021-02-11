@@ -1,1 +1,1 @@
-export default (AST) => JSON.stringify(AST);
+export default (diffAST) => JSON.stringify(diffAST);

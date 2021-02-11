@@ -24,7 +24,7 @@ const makeContainer = (name, children) => ({
   name, children, type: CONTAINER,
 });
 
-const buildAST = (obj1, obj2) => {
+const buildDiff = (obj1, obj2) => {
   const keysData1 = Object.keys(obj1);
   const keysData2 = Object.keys(obj2);
 
@@ -39,7 +39,7 @@ const buildAST = (obj1, obj2) => {
     const before = obj1[key];
     const after = obj2[key];
     if (_.isPlainObject(before) && _.isPlainObject(after)) {
-      return [...acc, makeContainer(key, buildAST(before, after))];
+      return [...acc, makeContainer(key, buildDiff(before, after))];
     }
     const value = { before, after };
     return [...acc, makeRecord(key, value, UPDATED)];
@@ -60,5 +60,5 @@ export default {
   isAdded,
   makeRecord,
   makeContainer,
-  buildAST,
+  buildDiff,
 };

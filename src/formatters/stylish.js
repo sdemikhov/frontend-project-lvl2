@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import ast from '../ast.js';
+import diff from '../diff.js';
 
 const INDENT_STEP = 4;
 
@@ -20,21 +20,21 @@ const formatValue = (value, indentCount = 0) => {
 };
 
 const formatRecord = (record, indentCount = 0) => {
-  const name = ast.getName(record);
-  const value = ast.getValue(record);
+  const name = diff.getName(record);
+  const value = diff.getValue(record);
   const signLength = 2;
-  const prefixIndentCount = !ast.isUnchanged(record) ? (indentCount - signLength) : indentCount;
+  const prefixIndentCount = !diff.isUnchanged(record) ? (indentCount - signLength) : indentCount;
   const indent = getIndent(prefixIndentCount);
 
-  if (ast.isAdded(record)) {
+  if (diff.isAdded(record)) {
     return `${indent}+ ${name}: ${formatValue(value, indentCount)}`;
   }
-  if (ast.isUpdated(record)) {
+  if (diff.isUpdated(record)) {
     const beforeString = `${indent}- ${name}: ${formatValue(value.before, indentCount)}`;
     const afterString = `${indent}+ ${name}: ${formatValue(value.after, indentCount)}`;
     return [beforeString, afterString].join('\n');
   }
-  if (ast.isRemoved(record)) {
+  if (diff.isRemoved(record)) {
     return `${indent}- ${name}: ${formatValue(value, indentCount)}`;
   }
   return `${indent}${name}: ${formatValue(value, indentCount)}`;
@@ -42,12 +42,12 @@ const formatRecord = (record, indentCount = 0) => {
 
 export default (AST) => {
   const inner = (item, indentCount = 4) => {
-    if (!ast.isContainer(item)) {
+    if (!diff.isContainer(item)) {
       return formatRecord(item, indentCount);
     }
-    const name = ast.getName(item);
+    const name = diff.getName(item);
     const indent = getIndent(indentCount);
-    const children = ast.getChildren(item);
+    const children = diff.getChildren(item);
 
     const formattedChildren = children.map((element) => inner(element, indentCount + INDENT_STEP));
     const result = [`${indent}${name}: {`, ...formattedChildren, `${indent}}`];

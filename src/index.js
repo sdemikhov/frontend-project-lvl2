@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import ast from './ast.js';
+import diff from './diff.js';
 import { parseJSON, parseYAML } from './parsers.js';
 import formatStylish from './formatters/stylish.js';
 import formatPlain from './formatters/plain.js';
@@ -29,9 +29,9 @@ const genDiff = (filePath1, filePath2, format = DEFAULT_FORMAT_NAME) => {
   const obj1 = loadFile(filePath1);
   const obj2 = loadFile(filePath2);
 
-  const AST = ast.buildAST(obj1, obj2);
+  const diffAST = diff.buildDiff(obj1, obj2);
 
-  return formatters[format](AST);
+  return formatters[format](diffAST);
 };
 
 export default genDiff;
