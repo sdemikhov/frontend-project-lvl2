@@ -2,8 +2,6 @@ import _ from 'lodash';
 
 import ast from '../ast.js';
 
-const STYLE_NAME = 'plain';
-
 const isNonComplex = (value) => ([
   _.isNumber,
   _.isBoolean,
@@ -40,7 +38,7 @@ const formatRecord = (record, ancestry) => {
   return null;
 };
 
-const format = (AST) => {
+export default (AST) => {
   const inner = (item, ancestry = []) => {
     if (!ast.isContainer(item)) {
       return formatRecord(item, ancestry);
@@ -55,9 +53,4 @@ const format = (AST) => {
 
   const result = _.sortBy(AST, [ast.getName]).map((item) => inner(item));
   return result.join('\n');
-};
-
-export default {
-  STYLE_NAME,
-  format,
 };

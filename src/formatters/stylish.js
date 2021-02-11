@@ -2,8 +2,6 @@ import _ from 'lodash';
 
 import ast from '../ast.js';
 
-const STYLE_NAME = 'stylish';
-
 const INDENT_STEP = 4;
 
 const getIndent = (indentCount) => ' '.repeat(indentCount);
@@ -42,7 +40,7 @@ const formatRecord = (record, indentCount = 0) => {
   return `${indent}${name}: ${formatValue(value, indentCount)}`;
 };
 
-const format = (AST) => {
+export default (AST) => {
   const inner = (item, indentCount = 4) => {
     if (!ast.isContainer(item)) {
       return formatRecord(item, indentCount);
@@ -59,9 +57,4 @@ const format = (AST) => {
   const formattedASTParts = _.sortBy(AST, [ast.getName]).map((item) => inner(item));
   const result = ['{', ...formattedASTParts, '}'];
   return result.join('\n');
-};
-
-export default {
-  STYLE_NAME,
-  format,
 };
