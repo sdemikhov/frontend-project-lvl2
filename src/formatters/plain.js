@@ -6,7 +6,6 @@ const isNonComplex = (value) => ([
   _.isNumber,
   _.isBoolean,
   _.isNull,
-  _.isDate,
 ].some((check) => check(value)));
 
 const formatValue = (value) => {
