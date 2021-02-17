@@ -13,6 +13,16 @@ const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8'
 
 describe('gendiff', () => {
   test.each([
+    ['json1.json', 'json2.json', 'result-stylish.txt'],
+    ['yml1.yml', 'yml2.yml', 'result-stylish.txt'],
+  ])('gendiff(%s, %s)', (fileName1, fileName2, resultName) => {
+    const filePath1 = getFixturePath(fileName1);
+    const filePath2 = getFixturePath(fileName2);
+
+    const expected = readFile(resultName);
+    expect(genDiff(filePath1, filePath2)).toBe(expected);
+  });
+  test.each([
     ['json1.json', 'json2.json', 'stylish', 'result-stylish.txt'],
     ['json1.json', 'json2.json', 'plain', 'result-plain.txt'],
     ['json1.json', 'json2.json', 'json', 'result-json.txt'],
