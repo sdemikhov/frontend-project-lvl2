@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 import diff from './diff.js';
-import { parseJSON, parseYAML } from './parsers.js';
+import parsers from './parsers.js';
 import { formatters, DEFAULT_FORMAT } from './formatters/formatters.js';
 
 const loadFile = (filePath) => {
@@ -10,8 +10,7 @@ const loadFile = (filePath) => {
   const fileContent = fs.readFileSync(absoluteFilePath, 'utf-8');
 
   const extension = path.extname(filePath);
-  const parse = extension === '.yml' ? parseYAML : parseJSON;
-  const obj = parse(fileContent);
+  const obj = parsers[extension](fileContent);
   return obj;
 };
 
