@@ -2,20 +2,14 @@ import _ from 'lodash';
 
 import diff from '../diff.js';
 
-const isNonComplex = (value) => ([
-  _.isNumber,
-  _.isBoolean,
-  _.isNull,
-].some((check) => check(value)));
-
 const formatValue = (value) => {
   if (_.isString(value)) {
     return `'${value}'`;
   }
-  if (isNonComplex(value)) {
-    return String(value);
+  if (_.isObject(value)) {
+    return '[complex value]';
   }
-  return '[complex value]';
+  return String(value);
 };
 
 const formatRecord = (record, ancestry) => {
