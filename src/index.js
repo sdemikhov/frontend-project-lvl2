@@ -3,9 +3,7 @@ import path from 'path';
 
 import diff from './diff.js';
 import { parseJSON, parseYAML } from './parsers.js';
-import formatStylish from './formatters/stylish.js';
-import formatPlain from './formatters/plain.js';
-import formatJSON from './formatters/json.js';
+import { formatters, DEFAULT_FORMAT } from './formatters/formatters.js';
 
 const loadFile = (filePath) => {
   const absoluteFilePath = path.resolve(process.cwd(), filePath);
@@ -17,15 +15,7 @@ const loadFile = (filePath) => {
   return obj;
 };
 
-const DEFAULT_FORMAT_NAME = 'stylish';
-
-const formatters = {
-  [DEFAULT_FORMAT_NAME]: formatStylish,
-  plain: formatPlain,
-  json: formatJSON,
-};
-
-const genDiff = (filePath1, filePath2, format = DEFAULT_FORMAT_NAME) => {
+const genDiff = (filePath1, filePath2, format = DEFAULT_FORMAT) => {
   const obj1 = loadFile(filePath1);
   const obj2 = loadFile(filePath2);
 

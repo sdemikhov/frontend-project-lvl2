@@ -4,14 +4,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 
 import genDiff from './index.js';
-
-const DEFAULT_FORMAT_NAME = 'stylish';
-
-const FORMATTER_NAMES = [
-  DEFAULT_FORMAT_NAME,
-  'plain',
-  'json',
-];
+import { formatters, DEFAULT_FORMAT } from './formatters/formatters.js';
 
 const getVersion = () => {
   const pathCurrentFile = fileURLToPath(import.meta.url);
@@ -29,8 +22,8 @@ const run = () => {
     .arguments('<filepath1> <filepath2>')
     .description('Compares two configuration files and shows a difference.')
     .helpOption('-h, --help', 'output usage information')
-    .addOption(new commander.Option('-f, --format [type]', 'output format').default(DEFAULT_FORMAT_NAME)
-      .choices(FORMATTER_NAMES))
+    .addOption(new commander.Option('-f, --format [type]', 'output format').default(DEFAULT_FORMAT)
+      .choices(Object.keys(formatters)))
     .action((filepath1, filepath2, options) => console.log(
       genDiff(filepath1, filepath2, options.format),
     ));
