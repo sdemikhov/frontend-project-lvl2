@@ -1,6 +1,9 @@
 install:
 	npm install
 
+link:
+	npm link
+
 lint:
 	npx eslint .
 
@@ -15,4 +18,4 @@ publish:
 
 check: lint test publish
 
-.PHONY: install lint publish check test test-coverage
+.PHONY: install link lint publish check test test-coverage
