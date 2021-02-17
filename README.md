@@ -8,7 +8,7 @@
 <pre>git clone https://github.com/sdemikhov/frontend-project-lvl2.git
 cd frontend-project-lvl1
 make install
-npm link</pre>
+make link</pre>
 <h2>Usage:</h2>
 <pre>Usage: gendiff [options] &lt;filepath1&gt; &lt;filepath2&gt;
 
