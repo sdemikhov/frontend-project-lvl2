@@ -12,36 +12,28 @@ const formatValue = (value) => {
   return String(value);
 };
 
-const formatRecord = (record, ancestry) => {
-  const name = diff.getName(record);
-  const value = diff.getValue(record);
-
-  const fullName = [...ancestry, name].join('.');
-  if (diff.isAdded(record)) {
-    return `Property '${fullName}' was added with value: ${formatValue(value)}`;
-  }
-  if (diff.isUpdated(record)) {
-    const before = formatValue(value.before);
-    const after = formatValue(value.after);
-    return `Property '${fullName}' was updated. From ${before} to ${after}`;
-  }
-  if (diff.isRemoved(record)) {
-    return `Property '${fullName}' was removed`;
-  }
-  return null;
-};
-
 export default (diffAST) => {
   const inner = (item, ancestry = []) => {
-    if (!diff.isContainer(item)) {
-      return formatRecord(item, ancestry);
-    }
     const name = diff.getName(item);
-    const children = diff.getChildren(item);
-
-    const newAncestry = [...ancestry, name];
-    const parts = children.map((element) => inner(element, newAncestry));
-    return parts.filter((part) => !_.isNull(part)).join('\n');
+    if (diff.isContainer(item)) {
+      const children = diff.getChildren(item);
+      const parts = children.map((element) => inner(element, [...ancestry, name]));
+      return parts.filter((part) => !_.isNull(part)).join('\n');
+    }
+    const value = diff.getValue(item);
+    const fullName = [...ancestry, name].join('.');
+    if (diff.isAdded(item)) {
+      return `Property '${fullName}' was added with value: ${formatValue(value)}`;
+    }
+    if (diff.isUpdated(item)) {
+      const before = formatValue(value.before);
+      const after = formatValue(value.after);
+      return `Property '${fullName}' was updated. From ${before} to ${after}`;
+    }
+    if (diff.isRemoved(item)) {
+      return `Property '${fullName}' was removed`;
+    }
+    return null;
   };
 
   const result = diffAST.map((item) => inner(item));
