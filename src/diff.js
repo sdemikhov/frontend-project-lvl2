@@ -25,28 +25,29 @@ const makeContainer = (name, children) => ({
 });
 
 const buildDiff = (obj1, obj2) => {
-  const keysData1 = Object.keys(obj1);
-  const keysData2 = Object.keys(obj2);
+  const keysObj1 = Object.keys(obj1);
+  const keysObj2 = Object.keys(obj2);
 
-  const equalKeys = keysData2.filter((key) => keysData1.includes(key));
-  const unchangedKeys = equalKeys.filter((key) => _.isEqual(obj1[key], obj2[key]));
-  const updatedKeys = equalKeys.filter((key) => !_.isEqual(obj1[key], obj2[key]));
-  const removedKeys = keysData1.filter((key) => !keysData2.includes(key));
-  const addedKeys = keysData2.filter((key) => !keysData1.includes(key));
-
-  const unchangedItems = unchangedKeys.map((key) => makeRecord(key, obj2[key], UNCHANGED));
-  const updatedItems = updatedKeys.reduce((acc, key) => {
+  const uniqueSortedKeys = _.sortBy(_.union(keysObj1, keysObj2));
+  const diff = uniqueSortedKeys.map((key) => {
     const before = obj1[key];
     const after = obj2[key];
-    if (_.isPlainObject(before) && _.isPlainObject(after)) {
-      return [...acc, makeContainer(key, buildDiff(before, after))];
+
+    if (_.isUndefined(before)) {
+      return makeRecord(key, after, ADDED);
     }
-    const value = { before, after };
-    return [...acc, makeRecord(key, value, UPDATED)];
-  }, []);
-  const removedItems = removedKeys.map((key) => makeRecord(key, obj1[key], REMOVED));
-  const addedItems = addedKeys.map((key) => makeRecord(key, obj2[key], ADDED));
-  return _.sortBy([...unchangedItems, ...updatedItems, ...removedItems, ...addedItems], getName);
+    if (_.isUndefined(after)) {
+      return makeRecord(key, before, REMOVED);
+    }
+    if (_.isEqual(before, after)) {
+      return makeRecord(key, after, UNCHANGED);
+    }
+    if (_.isPlainObject(before) && _.isPlainObject(after)) {
+      return makeContainer(key, buildDiff(before, after));
+    }
+    return makeRecord(key, { before, after }, UPDATED);
+  });
+  return diff;
 };
 
 export default {
