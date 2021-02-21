@@ -2,56 +2,51 @@ import _ from 'lodash';
 
 import diff from '../diff.js';
 
-const INDENT_STEP = 4;
+const getIndent = (level) => '    '.repeat(level);
 
-const getIndent = (indentCount) => ' '.repeat(indentCount);
-
-const formatValue = (value, indentCount = 0) => {
+const formatValue = (value, level) => {
   if (_.isPlainObject(value)) {
-    const entriesIndentCount = indentCount + INDENT_STEP;
     const sortedKeys = _.sortBy(Object.keys(value));
     const parts = sortedKeys.map((key) => (
-      `${getIndent(entriesIndentCount)}${key}: ${formatValue(value[key], entriesIndentCount)}`
+      `${getIndent(level + 1)}${key}: ${formatValue(value[key], level + 1)}`
     ));
-    const formattedObject = ['{', ...parts, `${getIndent(indentCount)}}`];
+    const formattedObject = ['{', ...parts, `${getIndent(level)}}`];
     return formattedObject.join('\n');
   }
   return String(value);
 };
 
-export default (AST) => {
-  const inner = (item, indentCount = 4) => {
+export default (diffAST) => {
+  const inner = (item, level) => {
     const name = diff.getName(item);
-    if (diff.isContainer(item)) {
-      const indent = getIndent(indentCount);
-      const children = diff.getChildren(item);
+    const indent = getIndent(level);
 
-      const formattedChildren = children.map((element) => (
-        inner(element, indentCount + INDENT_STEP)
-      ));
-      const result = [`${indent}${name}: {`, ...formattedChildren, `${indent}}`];
-      return result.join('\n');
+    if (diff.isContainer(item)) {
+      const children = diff.getChildren(item);
+      const formattedChildren = children.map((element) => (inner(element, level + 1)));
+      const containerParts = [`${indent}${name}: {`, ...formattedChildren, `${indent}}`];
+      return containerParts.join('\n');
     }
+
     const value = diff.getValue(item);
-    const signLength = 2;
-    const prefixIndentCount = !diff.isUnchanged(item) ? (indentCount - signLength) : indentCount;
-    const prefixedIndent = getIndent(prefixIndentCount);
+    const prefixLength = 2;
+    const cuttedIndent = getIndent(level).slice(prefixLength);
 
     if (diff.isAdded(item)) {
-      return `${prefixedIndent}+ ${name}: ${formatValue(value, indentCount)}`;
+      return `${cuttedIndent}+ ${name}: ${formatValue(value, level)}`;
     }
     if (diff.isUpdated(item)) {
-      const beforeString = `${prefixedIndent}- ${name}: ${formatValue(value.before, indentCount)}`;
-      const afterString = `${prefixedIndent}+ ${name}: ${formatValue(value.after, indentCount)}`;
+      const beforeString = `${cuttedIndent}- ${name}: ${formatValue(value.before, level)}`;
+      const afterString = `${cuttedIndent}+ ${name}: ${formatValue(value.after, level)}`;
       return [beforeString, afterString].join('\n');
     }
     if (diff.isRemoved(item)) {
-      return `${prefixedIndent}- ${name}: ${formatValue(value, indentCount)}`;
+      return `${cuttedIndent}- ${name}: ${formatValue(value, level)}`;
     }
-    return `${prefixedIndent}${name}: ${formatValue(value, indentCount)}`;
+    return `${indent}${name}: ${formatValue(value, level)}`;
   };
 
-  const formattedASTParts = AST.map((item) => inner(item));
+  const formattedASTParts = diffAST.map((item) => inner(item, 1));
   const result = ['{', ...formattedASTParts, '}'];
   return result.join('\n');
 };
