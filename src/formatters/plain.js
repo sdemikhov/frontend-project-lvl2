@@ -15,13 +15,16 @@ const formatValue = (value) => {
 export default (diffAST) => {
   const inner = (item, ancestry = []) => {
     const name = diff.getName(item);
+
     if (diff.isContainer(item)) {
       const children = diff.getChildren(item);
       const parts = children.map((element) => inner(element, [...ancestry, name]));
       return parts.filter((part) => !_.isNull(part)).join('\n');
     }
+
     const value = diff.getValue(item);
     const fullName = [...ancestry, name].join('.');
+
     if (diff.isAdded(item)) {
       return `Property '${fullName}' was added with value: ${formatValue(value)}`;
     }
