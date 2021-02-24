@@ -2,7 +2,10 @@ import _ from 'lodash';
 
 import diff from '../diff.js';
 
-const getIndent = (level) => '    '.repeat(level);
+const getIndent = (level) => {
+  const spacesCount = 4;
+  return ' '.repeat(spacesCount * level);
+};
 
 const formatValue = (value, level) => {
   if (_.isPlainObject(value)) {
