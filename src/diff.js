@@ -33,10 +33,10 @@ const buildDiff = (obj1, obj2) => {
     const before = obj1[key];
     const after = obj2[key];
 
-    if (_.isUndefined(before)) {
+    if (!_.has(obj1, key)) {
       return makeRecord(key, after, ADDED);
     }
-    if (_.isUndefined(after)) {
+    if (!_.has(obj2, key)) {
       return makeRecord(key, before, REMOVED);
     }
     if (_.isEqual(before, after)) {
