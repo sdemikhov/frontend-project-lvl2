@@ -5,7 +5,7 @@ import diff from './diff.js';
 import parsers from './parsers.js';
 import { formatters, DEFAULT_FORMAT } from './formatters/formatters.js';
 
-const TYPES_BY_EXTENSION = {
+const PARSER_TYPES_BY_EXTENSION = {
   '.json': 'json',
   '.yml': 'yaml',
   '.yaml': 'yaml',
@@ -16,7 +16,7 @@ const loadFile = (filePath) => {
   const fileContent = fs.readFileSync(absoluteFilePath, 'utf-8');
 
   const extension = path.extname(filePath);
-  const parserType = TYPES_BY_EXTENSION[extension];
+  const parserType = PARSER_TYPES_BY_EXTENSION[extension];
   const obj = parsers[parserType](fileContent);
   return obj;
 };
