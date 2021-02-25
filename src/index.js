@@ -2,8 +2,14 @@ import fs from 'fs';
 import path from 'path';
 
 import diff from './diff.js';
-import parsers from './parsers.js';
+import { parseJSON, parseYAML } from './parsers.js';
 import { formatters, DEFAULT_FORMAT } from './formatters/formatters.js';
+
+const parsers = {
+  '.json': parseJSON,
+  '.yml': parseYAML,
+  '.yaml': parseYAML,
+};
 
 const loadFile = (filePath) => {
   const absoluteFilePath = path.resolve(process.cwd(), filePath);
