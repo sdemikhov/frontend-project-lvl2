@@ -2,21 +2,26 @@ import fs from 'fs';
 import path from 'path';
 
 import diff from './diff.js';
-import { parseJSON, parseYAML } from './parsers.js';
+import parsers from './parsers.js';
 import { formatters, DEFAULT_FORMAT } from './formatters/formatters.js';
 
-const parsers = {
-  '.json': parseJSON,
-  '.yml': parseYAML,
-  '.yaml': parseYAML,
+const TYPES_BY_EXTENSION = {
+  '.json': 'json',
+  '.yml': 'yaml',
+  '.yaml': 'yaml',
+};
+
+const getTypeFromFilePath = (filePath) => {
+  const extension = path.extname(filePath);
+  return TYPES_BY_EXTENSION[extension];
 };
 
 const loadFile = (filePath) => {
   const absoluteFilePath = path.resolve(process.cwd(), filePath);
   const fileContent = fs.readFileSync(absoluteFilePath, 'utf-8');
 
-  const extension = path.extname(filePath);
-  const obj = parsers[extension](fileContent);
+  const type = getTypeFromFilePath(filePath);
+  const obj = parsers[type](fileContent);
   return obj;
 };
 
